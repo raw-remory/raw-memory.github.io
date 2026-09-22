@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Оголошення</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 18px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .add-button {
+      background: white;
+      color: #2563eb;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add-button:hover {
+      background: #e5e7eb;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .search {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .search input {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .search button {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .categories {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .category {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 9px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .category:hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    .announcements {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .card-image {
+      width: 100%;
+      height: 180px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+    }
+
+    .card-content {
+      padding: 18px;
+    }
+
+    .card h2 {
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    .description {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      color: #16a34a;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .location {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .contact {
+      width: 100%;
+      margin-top: 15px;
+      padding: 11px;
+      border: none;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .contact:hover {
+      background: #1d4ed8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      margin-top: 40px;
+      color: #777;
+    }
+
+    /* Модальне вікно */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 20px;
+    }
+
+    .modal-content input,
+    .modal-content textarea,
+    .modal-content select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    .modal-content textarea {
+      height: 100px;
+      resize: vertical;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .publish {
+      background: #2563eb;
+      color: white;
+    }
+
+    .cancel {
+      background: #e5e7eb;
+    }
+
+    @media (max-width: 600px) {
+      .header-content {
+        flex-direction: column;
+      }
+
+      .search {
+        flex-direction: column;
+      }
+
+      .search button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo">📢 Оголошення</div>
+    <button class="add-button" onclick="openModal()">
+      + Додати оголошення
+    </button>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="search">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Пошук оголошень..."
+      oninput="searchAnnouncements()"
+    >
+    <button onclick="searchAnnouncements()">🔍 Пошук</button>
+  </div>
+
+  <div class="categories">
+    <button class="category" onclick="filterCategory('all')">Усі</button>
+    <button class="category" onclick="filterCategory('Продаж')">Продаж</button>
+    <button class="category" onclick="filterCategory('Послуги')">Послуги</button>
+    <button class="category" onclick="filterCategory('Робота')">Робота</button>
+    <button class="category" onclick="filterCategory('Нерухомість')">Нерухомість</button>
+    <button class="category" onclick="filterCategory('Інше')">Інше</button>
+  </div>
+
+  <div class="announcements" id="announcements">
+
+    <article class="card" data-category="Продаж">
+      <div class="card-image">📱 Фото товару</div>
+      <div class="card-content">
+        <h2>Продам смартфон</h2>
+        <p class="description">
+          Смартфон у хорошому стані. Все працює без проблем.
+        </p>
+        <div class="price">8 500 грн</div>
+        <div class="location">📍 Івано-Франківськ</div>
+        <button class="contact" onclick="contactSeller('Продам смартфон')">
+          Зв'язатися
+        </button>
+      </div>
+    </article>
+
+    <article class="card" data-category="Послуги">
+      <div class="card-image">💻 Послуга</div>
+      <div class="card-content">
+        <h2>Створення сайтів</h2>
+        <p class="description">
+          Створюю сучасні сайти для бізнесу та особистих проєктів.
+        </p>
+        <div class="price">від 2 000 грн</div>
+        <div class="location">📍 Онлайн</div>
+        <button class="contact" onclick="contactSeller('Створення сайтів')">
+          Зв'язатися
+        </button>
+      </div>
+    </article>
+
+    <article class="card" data-category="Робота">
+      <div class="card-image">💼 Вакансія</div>
+      <div class="card-content">
+        <h2>Потрібен працівник</h2>
+        <p class="description">
+          Шукаємо відповідального працівника. Гнучкий графік.
+        </p>
+        <div class="price">20 000 грн/міс</div>
+        <div class="location">📍 Тлумач</div>
+        <button class="contact" onclick="contactSeller('Потрібен працівник')">
+          Зв'язатися
+        </button>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer>
+  © 2026 Оголошення — дошка оголошень
+</footer>
+
+<!-- Модальне вікно -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h2>Додати оголошення</h2>
+
+    <input id="title" type="text" placeholder="Назва оголошення">
+
+    <textarea id="description" placeholder="Опис"></textarea>
+
+    <input id="price" type="text" placeholder="Ціна">
+
+    <input id="location" type="text" placeholder="Місто / місце">
+
+    <select id="category">
+      <option>Продаж</option>
+      <option>Послуги</option>
+      <option>Робота</option>
+      <option>Нерухомість</option>
+      <option>Інше</option>
+    </select>
+
+    <div class="modal-buttons">
+      <button class="publish" onclick="addAnnouncement()">
+        Опублікувати
+      </button>
+
+      <button class="cancel" onclick="closeModal()">
+        Скасувати
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById("modal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
+
+  function addAnnouncement() {
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    const price = document.getElementById("price").value;
+    const location = document.getElementById("location").value;
+    const category = document.getElementById("category").value;
+
+    if (!title || !description || !price || !location) {
+      alert("Заповніть усі поля!");
+      return;
+    }
+
+    const card = document.createElement("article");
+
+    card.className = "card";
+    card.dataset.category = category;
+
+    card.innerHTML = `
+      <div class="card-image">📢 Оголошення</div>
+      <div class="card-content">
+        <h2>${escapeHTML(title)}</h2>
+        <p class="description">${escapeHTML(description)}</p>
+        <div class="price">${escapeHTML(price)}</div>
+        <div class="location">📍 ${escapeHTML(location)}</div>
+        <button class="contact" onclick="contactSeller('${escapeHTML(title)}')">
+          Зв'язатися
+        </button>
+      </div>
+    `;
+
+    document.getElementById("announcements").prepend(card);
+
+    document.getElementById("title").value = "";
+    document.getElementById("description").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("location").value = "";
+
+    closeModal();
+  }
+
+  function filterCategory(category) {
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+      if (category === "all" || card.dataset.category === category) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+
+  function searchAnnouncements() {
+    const query = document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase();
+
+    const cards = document.querySelectorAll(".card");
+
+    cards.forEach(card => {
+      const text = card.innerText.toLowerCase();
+
+      card.style.display = text.includes(query) ? "" : "none";
+    });
+  }
+
+  function contactSeller(title) {
+    alert("Ви обрали оголошення: " + title);
+  }
+
+  function escapeHTML(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("modal");
+
+    if (event.target === modal) {
+      closeModal();
+    }
+  };
+</script>
+
+</body>
+</html>
